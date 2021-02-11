@@ -64,7 +64,7 @@ function App(props) {
     setimage([])
   }
   const getproject = () => {
-  fetch("http://144.91.110.221:5900/getproject")
+  fetch("http://192.168.29.65:5900/getproject")
         .then(res => res.json())
         .then(data => {
           setprojectdata(data)
@@ -86,7 +86,7 @@ function App(props) {
     data.append('utilzedbudget', utilzedbudget)
     data.append('remainingbudget', remainingbudget)
     data.append('image', image)
-    const url = "http://144.91.110.221:5900/createproject"
+    const url = "http://192.168.29.65:5900/createproject"
     fetch(url, {
       method: 'post',
       body: data
@@ -95,7 +95,7 @@ function App(props) {
       .then(data => {
         alert("Category Created Successfully")
         getproject()
-        emptydata()
+        // emptydata()
       })
       .then(err => { })
   }
@@ -106,7 +106,7 @@ function App(props) {
   }
   const MapWithAMarker = withScriptjs(withGoogleMap(props =>   
     <GoogleMap
-      defaultZoom={8}
+      defaultZoom={7}
       defaultCenter={{ lat:30.468317, lng:77.771431 }}     
     >
     {/* <KmlLayer 
@@ -143,7 +143,88 @@ function App(props) {
         position={{ lat: 28.981256912102378,lng:77.6749711223261}} 
         // icon={require("./images/railway.png")}
         />
-        <Marker  
+               <Marker 
+        onClick={()=>{newmarker(7)}}
+        position={{ lat:28.9220974606475,lng:77.64707675781143}} 
+        // icon={require("./images/railway.png")}
+        />
+                  <Marker 
+        onClick={()=>{newmarker(8)}}
+        position={{ lat: 28.66693128348859,lng:77.39988015535613}} 
+        // icon={require("./images/railway.png")}
+        />
+        <Marker 
+        onClick={()=>{newmarker(9)}}
+        position={{ lat: 28.73867720622992,lng:76.85578119977716}} 
+        // icon={require("./images/railway.png")}
+        />
+         <Marker 
+        onClick={()=>{newmarker(10)}}
+        position={{ lat: 28.834086832936038,lng:78.76293546732849}} 
+        // icon={require("./images/railway.png")}
+        />
+           <Marker 
+        onClick={()=>{newmarker(11)}}
+        position={{ lat:27.88967665855918,lng:78.07455372881648}} 
+        // icon={require("./images/railway.png")}
+        />
+           <Marker 
+        onClick={()=>{newmarker(12)}}
+        position={{ lat:27.948306715603316,lng:80.77712308492445}} 
+        // icon={require("./images/railway.png")}
+        />
+             <Marker 
+        onClick={()=>{newmarker(13)}}
+        position={{ lat:30.341802768622763,lng:76.40188107533558}} 
+        // icon={require("./images/railway.png")}
+        />
+               <Marker 
+        onClick={()=>{newmarker(14)}}
+        position={{ lat:29.39219323065352,lng:76.96372758879184}} 
+        // icon={require("./images/railway.png")}
+        />  
+              <Marker 
+        onClick={()=>{newmarker(15)}}
+        position={{ lat:29.93222010870227,lng:73.8718070403745}} 
+        // icon={require("./images/railway.png")}
+        /> 
+            <Marker 
+        onClick={()=>{newmarker(16)}}
+        position={{ lat:26.216106693479055,lng:78.18242858209075}} 
+        // icon={require("./images/railway.png")}
+        />
+             <Marker 
+        onClick={()=>{newmarker(17)}}
+        position={{ lat:28.96212362171913,lng:75.28348986797758}} 
+        // icon={require("./images/railway.png")}
+        />    
+            <Marker 
+        onClick={()=>{newmarker(17)}}
+        position={{ lat:28.107185289610925,lng:75.39082712083267}} 
+        // icon={require("./images/railway.png")}
+        />    
+           <Marker 
+        onClick={()=>{newmarker(18)}}
+        position={{ lat: 26.91534531627232,lng:70.92668508264613}} 
+        // icon={require("./images/railway.png")}
+        /> 
+           <Marker 
+        onClick={()=>{newmarker(19)}}
+        position={{ lat: 26.91986954231327,lng:75.78633139957039}} 
+        // icon={require("./images/railway.png")}
+        />  
+          <Marker 
+        onClick={()=>{newmarker(20)}}
+        position={{ lat: 31.633425411432963,lng:74.86716372506456}} 
+        // icon={require("./images/railway.png")}
+        />  
+            <Marker 
+        onClick={()=>{newmarker(20)}}
+        position={{ lat: 28.014938835624942,lng:73.31600719801018}} 
+        // icon={require("./images/railway.png")}
+        />  
+        
+            <Marker  
              onClick={()=>{newmarker(1)}}
             position={markers.position}
         />
