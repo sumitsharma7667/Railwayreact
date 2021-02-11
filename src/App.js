@@ -1,6 +1,21 @@
 import React, { useEffect, useState } from "react"
+import { GoogleMap, Marker,withScriptjs,withGoogleMap,KmlLayer  } from "react-google-maps"
+//import { GoogleMap, useJsApiLoader,LoadScript,KmlLayer,Marker } from '@react-google-maps/api';
 import './App.css';
-function App() {
+import Modal from 'react-modal';
+const customStyles = {
+  content : {
+    top                   : "50%",
+    left                  : "50%",
+    right                 : 'auto',
+    bottom                : 'auto',
+    marginRight           : '-50%',
+    transform             : 'translate(-50%, -50%)',
+  
+    width:800
+  }
+};
+function App(props) {
   const [projectname, setprojectname] = useState("")
   const [owner, setowner] = useState("")
   const [latitude, setlatitude] = useState("")
@@ -11,11 +26,54 @@ function App() {
   const [approvedbudget, setapprovedbudget] = useState("")
   const [utilzedbudget, setutilzedbudget] = useState("")
   const [remainingbudget, setremainingbudget] = useState("")
-  const [image, setimage] = useState('')
+  const [image, setimage] = useState([])
+  const [projectdata,setprojectdata]=useState([])
+  const [modalIsOpen,setIsOpen] = React.useState(false);
+  const[markerindex,setmarkerindex]=useState(0)
+  const [markers,setmarker]=[{
+    position:{
+      lat:30.107933757795426, lng:78.28807467100444
+    },position:{
+      lat:30.468317, lng:77.771431,
+    }
+  }]
   useEffect(() => {
-
+    getproject()
   }, [])
-  const saveinfo = () => {
+  function openModal() {
+    setIsOpen(true);
+  }
+  function closeModal(){
+    setIsOpen(false);
+  }
+  function afterOpenModal() {
+    // references are now sync'd and can be accessed.
+    // subtitle.style.color = '#f00';
+  }
+  const emptydata=()=>{
+    setprojectname("")
+    setowner("")
+    setlatitude("")
+    setlongitude("")
+    setdescription("")
+    setlocation("")
+    setestimatedbudget("")
+    setapprovedbudget("")
+    setutilzedbudget("")
+    setremainingbudget("")
+    setimage([])
+  }
+  const getproject = () => {
+    fetch("http://192.168.29.65:4600/getproject")
+        .then(res => res.json())
+        .then(data => {
+          setprojectdata(data)
+          console.log(data)
+        })
+        .then(err => console.log(err))
+}
+    const saveinfo = () => {
+      console.log(image)
     const data = new FormData()
     data.append('projectname', projectname)
     data.append('owner', owner)
@@ -36,13 +94,45 @@ function App() {
       .then(res => res.json())
       .then(data => {
         alert("Category Created Successfully")
-        this.getFeeCategory()
+        emptydata()
       })
       .then(err => { })
   }
+  
+  const newmarker=(index)=>{
+    openModal()
+    setmarkerindex(index)
+  }
+  const MapWithAMarker = withScriptjs(withGoogleMap(props =>   
+    <GoogleMap
+      defaultZoom={8}
+      defaultCenter={{ lat:30.468317, lng:77.771431 }}     
+    >
+    {/* <KmlLayer 
+    url='https://www.google.com/maps/d/u/0/edit?mid=1_lLEWU_IwTm-aKI18Cagu8J5YedwSaZs&usp=sharing'
+     options={{ preserveViewport : false}}       
+    /> */}
+        <Marker 
+             onClick={()=>{newmarker(0)}}
+        position={{ lat: 30.0869, lng: 78.2676 }} 
+        icon={require("./images/railway.png")}
+        />   
+        <Marker  
+             onClick={()=>{newmarker(1)}}
+            position={markers.position}
+        />
+    </GoogleMap>
+  ));
+// new map
+const mapContainerStyle = {
+  width: "100vw",
+  height: "100vh"
+};
+// end map
+console.log(image)
   return (
     <>
-      <nav className="shadow-lg p-0 mb-3 bg-white rounded">
+     <nav className="shadow-lg p-0 mb-3 bg-white rounded">
         <div className="row py-1" style={{ backgroundColor: "#42429c" }} >
           <div className="col-3 px-5 d-flex " style={{ alignItems: "center" }}>
             <img src={require("../src/images/railway.png").default} style={{ height: 80, width: 80 }} alt="Logo" />
@@ -51,15 +141,43 @@ function App() {
             <h1 style={{
               color: "#fff", justifyContent: "center",
               alignItems: "center"
-            }}>Indian Railway Track Tracking System</h1>
+            }}>Railway Project Information Management System</h1>
           </div>
           <div className="col-3 px-5">
        <img src={require("../src/images/track.png").default} style={{height:100,width:"50%"}}  alt="Logo" />
        </div>
         </div>
       </nav>
-
-      <section class="p-5 ">
+      {/* <LoadScript googleMapsApiKey="AIzaSyBFSKCrZvReWE5ftJLQ9zWPEzQrlG-f2us">
+        <GoogleMap
+          center={{ lat: 30.468317, lng: 77.771431 }}
+          mapContainerStyle={mapContainerStyle}
+          zoom={4}
+        >
+          <KmlLayer url="https://www.google.com/maps/d/u/0/embed?mid=1_lLEWU_IwTm-aKI18Cagu8J5YedwSaZs"/>
+         {
+           projectdata.map((el,ind)=>{
+          console.log(el.latitude)
+          return(
+          <Marker
+          position={{ lat: JSON.parse(el.latitude),lng: JSON.parse(el.longitude) }}/>
+          )
+           }
+           )
+         }          
+        </GoogleMap>
+      </LoadScript> */}
+      <section className="p-2 shadow-lg p-3 mb-5 bg-white rounded ">
+      {/* <iframe src="https://www.google.com/maps/d/embed?mid=1_lLEWU_IwTm-aKI18Cagu8J5YedwSaZs" width="100%" height="580px"></iframe> */}
+    <MapWithAMarker
+  googleMapURL="https://maps.googleapis.com/maps/api/js?key=AIzaSyBFSKCrZvReWE5ftJLQ9zWPEzQrlG-f2us&v=3.exp&libraries=geometry,drawing,places"
+  loadingElement={<div style={{ height: `100%` }} />}
+  containerElement={<div style={{ height: `600px` }} />}
+  mapElement={<div style={{ height: `100%` }} />}
+>
+</MapWithAMarker>
+</section>
+      <section className="p-5 ">
         <div className="row p-5 d-flex justify-content-center shadow-lg p-3 mb-5 bg-white rounded" style={{ backgroundColor: "#f9f9f9", borderRadius: 100 }}  >
           <div className="col-11 ">
             <div className="form-row">
@@ -131,17 +249,99 @@ function App() {
             <div className="col-6">
               <div className="form-group">
                 <label>Image</label>
-                <input type="file" onChange={(e) => { setimage(e.target.files[0]) }} />
+                <input type="file" multiple={true} onChange={(e) => { setimage(e.target.files) }} name="image" />
               </div>
             </div>
             <div className="col-6">
-              <button className="btn btn-lg btn-success " type="submit" onClick={(e) => { saveinfo() }}>Save</button>
+              <button className="btn btn-lg btn-success "  type="submit" onClick={(e) => { saveinfo() }}>Save</button>
             </div>
-
           </div>
         </div>
       </section>
+      <div>
+        <Modal
+          isOpen={modalIsOpen}
+          onAfterOpen={afterOpenModal}
+          onRequestClose={closeModal}
+          style={customStyles}
+          contentLabel="Example Modal"
+          >
+  <div class="container">
+  <h2 style={{textAlign:"center"}}>Project Details</h2>            
+  <table class="table">
+    <tbody>
+      {projectdata.map((el,ind)=>{
+        console.log(el)
+        if(ind==markerindex){
+          return(
+            <>
+            <tr>
+            <th>Project Name</th>
+            <td>{el.projectname}</td>      
+          </tr>
+          <tr>
+            <th>Owner</th>
+            <td>{el.owner}</td>
+          </tr>
+          <tr>
+            <th>Location</th>
+            <td>{el.location}</td>
+          </tr>
+          <tr>
+            <th>estimated budget</th>
+            <td>{el.estimatedbudget}</td>
+          </tr>
+          <tr>
+            <th>approved budget</th>
+            <td>{el.approvedbudget}</td>
+          </tr>
+          <tr>
+            <th>utilized budget</th>
+            <td>{el.utilizedbudget}</td>
+          </tr>
+          <tr>
+            <th>remaining budget</th>
+            <td>{el.remainingbudget}</td>
+          </tr>
+          <tr>
+            <th>Description</th>
+            <td>{el.description}</td>
+          </tr>
+          <tr>
+            <th>latitude</th>
+            <td>{el.latitude}</td>
+          </tr>
+
+          <tr>
+            <th>longitude</th>
+            <td>{el.longitude}</td>
+          </tr>
+          </>
+          )
+        }
+      })}     
+    </tbody>
+  </table>
+</div>
+        </Modal>
+      </div>
     </>
   );
+
 }
+
+
+ 
+
+// const App=()=>{
+// return(
+//   <section>
+//     <div >
+//     <img src={require("./images/railway.jpg").default} style={{height:"100%",width:"100%"}}/>
+//     </div>
+//   </section>
+// )
+// }
+
+
 export default App;
