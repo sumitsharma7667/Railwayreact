@@ -26,7 +26,7 @@ function App(props) {
   const [approvedbudget, setapprovedbudget] = useState("")
   const [utilzedbudget, setutilzedbudget] = useState("")
   const [remainingbudget, setremainingbudget] = useState("")
-  const [image, setimage] = useState([])
+  const [image, setimage] = useState('')
   const [projectdata,setprojectdata]=useState([])
   const [modalIsOpen,setIsOpen] = React.useState(false);
   const[markerindex,setmarkerindex]=useState(0)
@@ -64,7 +64,7 @@ function App(props) {
     setimage([])
   }
   const getproject = () => {
-    fetch("http://144.91.110.221:5900/getproject")
+  fetch("http://144.91.110.221:5900/getproject")
         .then(res => res.json())
         .then(data => {
           setprojectdata(data)
@@ -94,6 +94,7 @@ function App(props) {
       .then(res => res.json())
       .then(data => {
         alert("Category Created Successfully")
+        getproject()
         emptydata()
       })
       .then(err => { })
@@ -113,10 +114,35 @@ function App(props) {
      options={{ preserveViewport : false}}       
     /> */}
         <Marker 
-             onClick={()=>{newmarker(0)}}
+        onClick={()=>{newmarker(0)}}
         position={{ lat: 30.0869, lng: 78.2676 }} 
-        icon={require("./images/railway.png")}
+        // icon={require("./images/railway.png")}
         />   
+         <Marker 
+        onClick={()=>{newmarker(2)}}
+        position={{ lat:30.17595217750137,lng: 78.12239892537548}} 
+        // icon={require("./images/railway.png")}
+        />
+                 <Marker 
+        onClick={()=>{newmarker(3)}}
+        position={{ lat:30.033300117966476,lng:  78.20976324349134}} 
+        // icon={require("./images/railway.png")}
+        />
+        <Marker 
+        onClick={()=>{newmarker(4)}}
+        position={{ lat: 29.96065129313755,lng:   77.54263686917999}} 
+        // icon={require("./images/railway.png")}
+        />
+            <Marker 
+        onClick={()=>{newmarker(5)}}
+        position={{ lat: 29.47093999301805,lng:    77.70809379367124}} 
+        // icon={require("./images/railway.png")}
+        />
+              <Marker 
+        onClick={()=>{newmarker(6)}}
+        position={{ lat: 28.981256912102378,lng:77.6749711223261}} 
+        // icon={require("./images/railway.png")}
+        />
         <Marker  
              onClick={()=>{newmarker(1)}}
             position={markers.position}
@@ -249,7 +275,7 @@ console.log(image)
             <div className="col-6">
               <div className="form-group">
                 <label>Image</label>
-                <input type="file" multiple={true} onChange={(e) => { setimage(e.target.files) }} name="image" />
+                <input type="file" multiple={true} onChange={(e) => { setimage(e.target.files[0]) }} name="image" />
               </div>
             </div>
             <div className="col-6">
