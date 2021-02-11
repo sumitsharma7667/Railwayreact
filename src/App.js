@@ -64,7 +64,7 @@ function App(props) {
     setimage([])
   }
   const getproject = () => {
-    fetch("http://192.168.29.65:4600/getproject")
+    fetch("http://144.91.110.221:5900/getproject")
         .then(res => res.json())
         .then(data => {
           setprojectdata(data)
@@ -86,7 +86,7 @@ function App(props) {
     data.append('utilzedbudget', utilzedbudget)
     data.append('remainingbudget', remainingbudget)
     data.append('image', image)
-    const url = "http://192.168.29.65:4600/createproject"
+    const url = "http://144.91.110.221:5900/createproject"
     fetch(url, {
       method: 'post',
       body: data
